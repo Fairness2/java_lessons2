@@ -48,7 +48,7 @@ public class AuthenticationService {
         //return oUser.orElse(null);
     }
 
-    public boolean changeUserName(User user, String name) {
+    public synchronized boolean changeUserName(User user, String name) {
         Connection conn = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
