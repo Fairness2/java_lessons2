@@ -2,10 +2,7 @@ package lesson_125344.chat;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.function.Consumer;
 
 public class Chat extends JFrame {
@@ -13,16 +10,15 @@ public class Chat extends JFrame {
     private JTextField messageTextField;
     private JScrollPane scrollPane;
 
-    public Chat(Consumer<String> consumer){
+    public Chat(Consumer<String> consumer, Consumer<Boolean> exitConsumer){
         setTitle("Чат");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        createWindow(consumer);
+        createWindow(consumer, exitConsumer);
         setVisible(true);
         setBounds(50, 50, 300, 500);
     }
 
-
-    private void createWindow(Consumer<String> consumer){
+    private void createWindow(Consumer<String> consumer, Consumer<Boolean> exitConsumer){
         setLayout(new BorderLayout());
 
         chatPanel = new JPanel();
@@ -55,6 +51,14 @@ public class Chat extends JFrame {
         chatMenu.add(clearButton);
         menu.add(chatMenu);
         add(menu, BorderLayout.NORTH);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                exitConsumer.accept(true);
+                super.windowClosed(e);
+            }
+        });
     }
 
     public void showMessage (String message, boolean selfMessage) {
