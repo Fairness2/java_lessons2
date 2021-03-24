@@ -14,7 +14,6 @@ public class ClientHandler extends IO {
     private final Server server;
     private final Socket clientSocket;
     private User user;
-    private final Thread runedThred;
     private Timer authTimer;
 
     public ClientHandler(Server server, Socket clientSocket) throws IOException {
@@ -23,7 +22,7 @@ public class ClientHandler extends IO {
             this.clientSocket = clientSocket;
             setInStream(new DataInputStream(clientSocket.getInputStream()));
             setOutStream(new DataOutputStream(clientSocket.getOutputStream()));
-            runedThred = new Thread(() -> {
+            this.server.getExService().execute(() -> {
                 try {
                     run();
                 }
@@ -35,8 +34,6 @@ public class ClientHandler extends IO {
                     throw new RuntimeException(e.getMessage(), e);
                 }
             });
-            runedThred.start();
-
         }
         catch (IOException | RuntimeException e){
             throw new IOException(e.getMessage(), e);
