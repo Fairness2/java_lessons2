@@ -9,16 +9,20 @@ import java.net.Socket;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
     private ServerSocket socket;
     private final int portNumber = 8000;
     private final AuthenticationService authService;
     private final Set<ClientHandler> clients;
+    private final ExecutorService exService;
 
     public Server(){
         authService = new AuthenticationService();
         clients = new HashSet<>();
+        exService = Executors.newCachedThreadPool();
 
         try {
             socket = new ServerSocket(portNumber);
@@ -42,6 +46,10 @@ public class Server {
                 e.printStackTrace();
             }
         }
+    }
+
+    public ExecutorService getExService() {
+        return exService;
     }
 
     public AuthenticationService getAuthService() {
